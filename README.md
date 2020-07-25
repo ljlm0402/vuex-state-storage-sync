@@ -1,0 +1,1 @@
+# vuex-state-storage-sync
