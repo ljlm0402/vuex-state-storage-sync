@@ -2,11 +2,9 @@
 
 [Vuex](https://vuex.vuejs.org/) State and Storage Synchronization module
 
-<a href="https://www.npmjs.com/package/vuex-state-storage-sync" target="_blank"><img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/package/vuex-state-storage-sync" target="_blank"><img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/package/vuex-state-storage-sync" target="_blank"><img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" /></a>
-<a href="https://www.npmjs.com/package/vuex-state-storage-sync" target="_blank"><img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" /></a>
+<img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="NPM Version" /> <img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="Package License" /> <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" /> <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" />
 
+<img src="https://img.shields.io/badge/node-12.16.0-brightgreen" alt="Node Verserion" /> <img src="https://img.shields.io/badge/npm-v6.14.4-blue" alt="NPM Verserion" />
 <br />
 
 ## 📬 Recommended Commit Message
@@ -23,11 +21,3 @@
 ## 💳 License
 
 [MIT](LICENSE)
-
-## 🤝 Contributors
-
-## 📬 Please request an issue
-
-In the future, please write down your desired template, questions, and features to be added, and we will try our best to answer and reflect them.
-
-Thank you very much for your interest in our package. 
