@@ -30,11 +30,9 @@ export default new Vuex.Store({
     syncStateStorage()
   ]
 });
-
 ```
 
 ### API
-
 
 ## 📬 Recommended Commit Message
 
