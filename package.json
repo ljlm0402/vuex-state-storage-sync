@@ -1,13 +1,80 @@
 {
-    "name": "vuex-state-storage-sync",
-    "version": "0.0.1",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "MIT"
-  }
-  
+  "name": "vuex-state-storage-sync",
+  "version": "0.0.2",
+  "description": "Synchronization of vuex state and storage",
+  "author": "AGUMON <ljlm0402@gmail.com>",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "main": "dist/vuex-state-stoage-sync.js",
+  "module": "dist/vuex-state-stoage-sync.es.js",
+  "unpkg": "dist/vuex-state-stoage-sync.umd.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "vue",
+    "vuex",
+    "store",
+    "state",
+    "localstorage",
+    "sessionstorage",
+    "plugin"
+  ],
+  "bin": {},
+  "scripts": {
+    "build": "rimraf dist && microbundle --external all --name syncStateStorage",
+    "prepare": "npm run build",
+    "test": "npm-run-all test:**",
+    "test:jest": "jest --env=jsdom",
+    "test:size": "bundlesize"
+  },
+  "dependencies": {
+    "deepmerge": "^4.2.2",
+    "shvl": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "all-contributors-cli": "^6.17.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^26.1.0",
+    "bundlesize": "^0.18.0",
+    "dom-storage": "^2.1.0",
+    "eslint": "^7.5.0",
+    "husky": "^4.2.5",
+    "jest": "^26.1.0",
+    "microbundle": "^0.12.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
+    "rimraf": "^3.0.2",
+    "vue": "^2.6.11",
+    "vuex": "^3.5.1"
+  },
+  "peerDependencies": {
+    "vue": "^2.0.0",
+    "vuex": "^2.0.0 || ^3.0.0"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/*.js",
+      "threshold": "800b"
+    }
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build && pretty-quick --staged"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljlm0402/vuex-state-storage-sync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ljlm0402/vuex-state-storage-sync/issues"
+  },
+  "homepage": "https://github.com/ljlm0402/vuex-state-storage-sync#readme"
+}
