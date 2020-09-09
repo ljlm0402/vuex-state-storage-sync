@@ -4,7 +4,6 @@
 
 <img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="NPM Version" /> <img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="Package License" /> <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" /> <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" />
 
-<img src="https://img.shields.io/badge/node-12.16.0-brightgreen" alt="Node Verserion" /> <img src="https://img.shields.io/badge/npm-v6.14.4-blue" alt="NPM Verserion" />
 <br />
 
 ## 🕹Guide
@@ -25,14 +24,30 @@ import syncStateStorage from 'vuex-state-storage-sync';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  // ... 
+  state: {
+    // ...
+  },
+  getters: {
+    // ...
+  },
+  mutations: {
+    // ...
+  },
+  actions: {
+    // ...
+  },
+  modules: {
+    // ...
+  }
   plugins: [
-    syncStateStorage()
+    syncStateStorage({
+      storage: window.localStorage || window.sessionStorage, // Storage Types
+      key: '',  // Storage Key Name
+      path: [''] // State data to be synchronized to storage
+    })
   ]
 });
 ```
-
-### API
 
 ## 📬 Recommended Commit Message
 
