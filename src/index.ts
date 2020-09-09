@@ -13,12 +13,9 @@ interface Options<State> {
   paths?: string[];
   overwrite?: boolean;
   fetchBeforeUse?: boolean;
-  history?: boolean;
 
   getState?: (key: string, storage: Storage) => any;
   setState?: (key: string, state: any, storage: Storage) => void;
-
-  setHistory?: (key: string, state: any, storage: Storage) => void;
 
   reducer?: (state: State, paths: string[]) => object;
   filter?: (mutation: MutationPayload) => boolean;
@@ -38,8 +35,8 @@ export default function <State>(options?: Options<State>): (store: Store<State>)
 
   const getState = (key: string, storage: Storage): any => {
     try {
-      let value: string;
-      return (value = storage.getItem(key)) && typeof value !== 'undefined' ? JSON.parse(value) : undefined;
+      const value: string = storage.getItem(key);
+      return (typeof value !== 'undefined') ? JSON.parse(value) : undefined;
     } catch (err) {
       return undefined;
     }
@@ -47,11 +44,6 @@ export default function <State>(options?: Options<State>): (store: Store<State>)
 
   const setState = (key: string, state: any, storage: Storage): void => {
     return storage.setItem(key, JSON.stringify(state));
-  }
-
-  const setHistory = (key: string, storage: Storage): void => {
-    const state = getState(key, storage);
-    return storage.setItem('history', JSON.stringify(state));
   }
 
   const reducer = (state: any, paths: string[]): any => {
@@ -97,7 +89,6 @@ export default function <State>(options?: Options<State>): (store: Store<State>)
             })
       );
       (options.rehydrated || function () {})(store);
-      (options.history && setHistory(key, storage));
     }
 
     (options.subscriber || subscriber)(store)(function (mutation, state) {
