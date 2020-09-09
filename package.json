@@ -1,6 +1,6 @@
 {
   "name": "vuex-state-storage-sync",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Synchronization of vuex state and storage",
   "author": "AGUMON <ljlm0402@gmail.com>",
   "license": "MIT",
@@ -21,10 +21,7 @@
   "bin": {},
   "scripts": {
     "build": "rimraf dist && microbundle --external all --name syncStateStorage",
-    "prepare": "npm run build",
-    "test": "npm-run-all test:**",
-    "test:jest": "jest --env=jsdom",
-    "test:size": "bundlesize"
+    "prepare": "npm run build"
   },
   "dependencies": {
     "deepmerge": "^4.2.2",
