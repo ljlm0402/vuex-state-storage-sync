@@ -6,20 +6,52 @@
 
 <br />
 
-## 🕹Guide
-
-### Install
+## 🖲 Install
 
 ```js
 $ npm install --save vuex-state-storage-sync
 ```
 
-### Usage
+## 🕹 Usage
+
+#### For Vue 3 and Vuex 4
 
 ```js
-import Vue from 'vue';
-import Vuex from 'vuex';
-import syncStateStorage from 'vuex-state-storage-sync';
+import { createStore } from "vuex";
+import syncStateStorage from "vuex-state-storage-sync";
+
+export default createStore({
+  state: {
+    // ...
+  },
+  getters: {
+    // ...
+  },
+  mutations: {
+    // ...
+  },
+  actions: {
+    // ...
+  },
+  modules: {
+    // ...
+  }
+  plugins: [
+    syncStateStorage({
+      storage: window.localStorage || window.sessionStorage, // Storage Types
+      key: '',  // Storage Key Name
+      path: [''] // State data to be synchronized to storage
+    })
+  ]
+});
+```
+
+#### For Vue 2 and Vuex 3
+
+```js
+import Vue from "vue";
+import Vuex from "vuex";
+import syncStateStorage from "vuex-state-storage-sync";
 
 Vue.use(Vuex);
 
