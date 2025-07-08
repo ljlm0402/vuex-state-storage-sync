@@ -1,65 +1,149 @@
-<img src='https://github.com/ljlm0402/vuex-state-storage-sync/raw/images/logo.jpg' border='0' alt='logo' />
+<p align="center">
+  <img src="https://github.com/ljlm0402/vuex-state-storage-sync/raw/images/logo.jpg" border="0" alt="logo" width="400" />
+</p>
 
-[Vuex](https://vuex.vuejs.org/) State and Storage([local](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), [session](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)) Synchronization module
+<h2 align="center">Vuex State & Storage Synchronization</h2>
+<p align="center">
+  <b>
+    Minimal, Fast, and Flexible Vuex State <br>
+    Persistence & Synchronization with Local/Session Storage
+  </b>
+</p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/vuex-state-storage-sync">
+    <img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="NPM Version" />
+  </a>
+  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/blob/main/LICENSE">
+    <img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="Package License" />
+  </a>
+  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/releases">
+    <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" />
+  </a>
+  <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" />
+</p>
 
-<img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="NPM Version" /> <img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="Package License" /> <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" /> <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" />
+---
 
-<br />
+## 🖲 Install
 
-## 🕹Guide
-
-### Install
-
-```js
-$ npm install --save vuex-state-storage-sync
+```bash
+npm install --save vuex-state-storage-sync
 ```
 
-### Usage
+## 🕹 Usage
+
+### For Vue 3 + Vuex 4
 
 ```js
-import Vue from 'vue';
-import Vuex from 'vuex';
-import syncStateStorage from 'vuex-state-storage-sync';
+import { createStore } from "vuex";
+import syncStateStorage from "vuex-state-storage-sync";
+
+export default createStore({
+  // ... your store options
+  plugins: [
+    syncStateStorage({
+      storage: window.localStorage, // or window.sessionStorage
+      key: "my-app", // Storage key name
+      paths: ["user", "settings"], // State paths to sync
+    }),
+  ],
+});
+```
+
+### For Vue 2 + Vuex 3
+
+```js
+import Vue from "vue";
+import Vuex from "vuex";
+import syncStateStorage from "vuex-state-storage-sync";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    // ...
-  },
-  getters: {
-    // ...
-  },
-  mutations: {
-    // ...
-  },
-  actions: {
-    // ...
-  },
-  modules: {
-    // ...
-  }
+  // ... your store options
   plugins: [
     syncStateStorage({
-      storage: window.localStorage || window.sessionStorage, // Storage Types
-      key: '',  // Storage Key Name
-      path: [''] // State data to be synchronized to storage
-    })
-  ]
+      storage: window.sessionStorage,
+      key: "legacy-app",
+      paths: ["auth.token"],
+    }),
+  ],
 });
 ```
 
-## 📬 Recommended Commit Message
+## ⚙️ Options
 
-|  When |  Commit Message  |
-|:--------|:-----------|
-| Add function | feat: ⚡️ Add function |
-| Fix bug | fix: 🐞 Fix bug |
-| Refactoring | refactor: 🛠 Refactoring |
-| Add package | package: 📦 Add package |
-| Fix readme | docs: 📚 Fix readme |
-| Improvements style | style: 👁 Improvements style |
+| Option                     | Type      | Default      | Description                                              |
+| :------------------------- | :-------- | :----------- | :------------------------------------------------------- |
+| `storage`                  | Storage   | localStorage | Storage engine (localStorage, sessionStorage, or custom) |
+| `key`                      | string    | "store"      | Storage key name                                         |
+| `paths`                    | string\[] | undefined    | Array of state paths to persist                          |
+| `overwrite`                | boolean   | false        | If true, state is overwritten on rehydration             |
+| `fetchBeforeUse`           | boolean   | false        | Load from storage before plugin install                  |
+| `getState`                 | Function  | internal     | Custom get state from storage                            |
+| `setState`                 | Function  | internal     | Custom set state to storage                              |
+| `removeState`              | Function  | internal     | Custom remove state from storage                         |
+| `reducer`                  | Function  | internal     | Custom reducer to select part of state                   |
+| `filter`                   | Function  | internal     | Mutation filter                                          |
+| `subscriber`               | Function  | internal     | Custom subscribe implementation                          |
+| `rehydrated`               | Function  | internal     | Callback after rehydration                               |
+| `merge`                    | Function  | deepmerge    | Custom merge function                                    |
+| `arrayMerge`/`arrayMerger` | Function  | overwrite    | Custom array merge logic                                 |
+| `assertStorage`            | Function  | internal     | Storage validation on start                              |
 
-## 💳 License
+## 🛡 TypeScript Support
+
+Type definitions are included, and all options are fully type-safe for use with TypeScript.
+
+## 💡 Advanced Usage
+
+### Custom Remove (e.g., remove state on logout)
+
+```js
+const plugin = syncStateStorage({
+  // ...options
+});
+
+store.subscribeAction({
+  after: (action) => {
+    if (action.type === "user/logout") {
+      plugin.removeState("my-app", window.localStorage);
+    }
+  },
+});
+```
+
+### Custom Storage (e.g., cookies, IndexedDB)
+
+```js
+const customStorage = {
+  getItem: (key) => /* ... */,
+  setItem: (key, value) => /* ... */,
+  removeItem: (key) => /* ... */
+};
+
+syncStateStorage({
+  storage: customStorage,
+  // ...
+});
+```
+
+## 💬 Commit Message Convention
+
+| When         | Commit Message                |
+| :----------- | :---------------------------- |
+| Add feature  | `feat: ⚡️ Add function`      |
+| Fix bug      | `fix: 🐞 Fix bug`             |
+| Refactor     | `refactor: 🛠 Refactoring`     |
+| Add package  | `package: 📦 Add package`     |
+| Docs change  | `docs: 📚 Fix readme`         |
+| Style change | `style: 👁 Improvements style` |
+| Releases     | `releases: 🎉 Releases`       |
+
+## 📜 License
 
 [MIT](LICENSE)
+
+> ### Made with ❤️ by AGUMON 🦖
+>
+> ### [GitHub](https://github.com/ljlm0402)

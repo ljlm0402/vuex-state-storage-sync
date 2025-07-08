@@ -1,0 +1,30 @@
+# 개발/테스트용 파일 제외
+src/
+test/
+tests/
+example/
+examples/
+scripts/
+coverage/
+.github/
+.gitignore
+.npmignore
+tsconfig.json
+tsup.config.ts
+babel.config.js
+jest.config.js
+.eslintrc*
+.prettierrc*
+.editorconfig
+.vscode/
+.idea/
+.DS_Store
+
+# 기타 불필요 파일
+*.log
+*.md
+!README.md
+LICENSE
+
+# npm에 꼭 필요한 파일은 제외하지 말 것!
+# dist/ 은 제외 X (즉, 반드시 포함시켜야 함)
