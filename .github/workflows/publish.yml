@@ -4,29 +4,34 @@ on:
   pull_request:
     branches:
       - master
+    paths:
+      - package.json
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code
+      - name: ⬇️ Checkout source code
         uses: actions/checkout@v2
 
-      - name: Setup nodejs
+      - name: ⎔ Setup nodejs
         uses: actions/setup-node@v1.4.3
         with:
-          node-version: 12
+          node-version: lts/* # 최신 장기지원(LTS) 버전 추천
           registry-url: https://registry.npmjs.org/
 
-      - name: Install npm
-        run: npm install
+      - name: 📦 Install dependencies
+        run: npm ci # npm install보다 ci가 더 깔끔
 
-      - name: Publish npm
+      - name: 🏗 Build project
+        run: npm run build
+
+      - name: 🚀 Publish to npm
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: Notification
+      - name: 📤 Notification
         uses: 8398a7/action-slack@v2.6.0
         with:
           status: ${{ job.status }}

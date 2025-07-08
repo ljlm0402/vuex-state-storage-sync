@@ -1,13 +1,9 @@
 {
   "name": "vuex-state-storage-sync",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Synchronization of vuex state and storage",
   "author": "AGUMON <ljlm0402@gmail.com>",
   "license": "MIT",
-  "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "keywords": [
     "vue",
     "vuex",
@@ -19,6 +15,10 @@
     "persistence",
     "sync"
   ],
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --dts --format cjs,esm --outDir dist",
     "dev": "tsup src/index.ts --dts --format esm,cjs --watch",
@@ -51,22 +51,6 @@
   "peerDependencies": {
     "vue": "^2.0.0 || ^3.0.0",
     "vuex": "^2.0.0 || ^3.0.0 || ^4.0.0"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  },
-  "bundlesize": [
-    {
-      "path": "./dist/*.js",
-      "threshold": "800b"
-    }
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run build && pretty-quick --staged"
-    }
   },
   "repository": {
     "type": "git",
