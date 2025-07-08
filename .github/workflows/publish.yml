@@ -1,27 +1,25 @@
 name: npm publish
 
 on:
-  pull_request:
-    branches:
-      - master
-    paths:
-      - package.json
+  push:
+    tags:
+      - 'v*.*.*' # v1.1.0, v2.0.0 등 버전 태그 푸시 시
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: ⎔ Setup nodejs
-        uses: actions/setup-node@v1.4.3
+        uses: actions/setup-node@v4
         with:
-          node-version: lts/* # 최신 장기지원(LTS) 버전 추천
+          node-version: lts/*
           registry-url: https://registry.npmjs.org/
 
       - name: 📦 Install dependencies
-        run: npm ci # npm install보다 ci가 더 깔끔
+        run: npm ci
 
       - name: 🏗 Build project
         run: npm run build
@@ -31,7 +29,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: 📤 Notification
+      - name: 📤 Slack Notification
         uses: 8398a7/action-slack@v2.6.0
         with:
           status: ${{ job.status }}
