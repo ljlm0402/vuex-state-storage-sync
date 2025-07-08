@@ -5,9 +5,8 @@
   "author": "AGUMON <ljlm0402@gmail.com>",
   "license": "MIT",
   "source": "src/index.ts",
-  "main": "dist/vuex-state-stoage-sync.js",
-  "module": "dist/vuex-state-stoage-sync.es.js",
-  "unpkg": "dist/vuex-state-stoage-sync.umd.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "keywords": [
     "vue",
@@ -16,11 +15,13 @@
     "state",
     "localstorage",
     "sessionstorage",
-    "plugin"
+    "plugin",
+    "persistence",
+    "sync"
   ],
-  "bin": {},
   "scripts": {
-    "build": "rimraf dist && microbundle --external all --name syncStateStorage",
+    "build": "tsup src/index.ts --dts --format cjs,esm --outDir dist",
+    "dev": "tsup src/index.ts --dts --format esm,cjs --watch",
     "prepare": "npm run build"
   },
   "dependencies": {
@@ -43,12 +44,13 @@
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
     "rimraf": "^3.0.2",
+    "tsup": "^8.5.0",
     "vue": "^2.6.11",
     "vuex": "^3.5.1"
   },
   "peerDependencies": {
-    "vue": "^2.0.0",
-    "vuex": "^2.0.0 || ^3.0.0"
+    "vue": "^2.0.0 || ^3.0.0",
+    "vuex": "^2.0.0 || ^3.0.0 || ^4.0.0"
   },
   "babel": {
     "presets": [
