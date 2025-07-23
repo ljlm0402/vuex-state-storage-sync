@@ -12,61 +12,62 @@ import { Store, MutationPayload } from 'vuex';
 import merge from 'deepmerge';
 import * as shvl from 'shvl';
 
-/**
- * Storage 인터페이스 정의
- * removeItem은 optional로 두어 다양한 storage 엔진을 지원
- */
+// --- Storage Interface ---
 interface Storage {
   getItem: (key: string) => string | null;
   setItem: (key: string, value: string) => void;
   removeItem?: (key: string) => void;
 }
 
+// --- Options Type ---
 type ArrayMergeFn = (storeArr: any[], savedArr: any[]) => any[];
 
 interface Options<State> {
-  key?: string; // 저장소 key명
-  storage?: Storage; // 사용할 스토리지 엔진
-  paths?: string[]; // 동기화할 state 경로
-  overwrite?: boolean; // 복원시 기존 state 덮어쓰기 여부
-  fetchBeforeUse?: boolean; // 플러그인 실행 전 저장소에서 미리 가져올지
+  key?: string;
+  storage?: Storage;
+  paths?: string[];
+  overwrite?: boolean;
+  fetchBeforeUse?: boolean;
 
-  getState?: (key: string, storage: Storage) => any; // state 복원 함수
-  setState?: (key: string, state: any, storage: Storage) => void; // state 저장 함수
-  removeState?: (key: string, storage: Storage) => void; // state 삭제 함수
+  getState?: (key: string, storage: Storage) => any;
+  setState?: (key: string, state: any, storage: Storage) => void;
+  removeState?: (key: string, storage: Storage) => void;
 
-  reducer?: (state: State, paths?: string[]) => object; // 동기화 state 필터 함수
-  filter?: (mutation: MutationPayload) => boolean; // 어떤 mutation에 반응할지
+  reducer?: (state: State, paths?: string[]) => object;
+  filter?: (mutation: MutationPayload) => boolean;
 
-  merge?: (obj1: object | any[], obj2: object | any[], options: object) => object | any[]; // 병합 함수
-  arrayMerge?: ArrayMergeFn; // 배열 병합 함수(공식 네이밍)
-  arrayMerger?: ArrayMergeFn; // 배열 병합 함수(alias)
+  merge?: (obj1: object | any[], obj2: object | any[], options: object) => object | any[];
+  arrayMerge?: ArrayMergeFn;
+  arrayMerger?: ArrayMergeFn;
 
-  rehydrated?: (store: Store<State>) => void; // 복원 완료시 콜백
-  subscriber?: (store: Store<State>) => (handler: (mutation: any, state: State) => void) => void; // subscribe 커스터마이즈
-  assertStorage?: (storage: Storage) => void | Error; // storage 유효성 체크 함수
+  rehydrated?: (store: Store<State>) => void;
+  subscriber?: (store: Store<State>) => (handler: (mutation: any, state: State) => void) => void;
+  assertStorage?: (storage: Storage) => void | Error;
 }
 
-/**
- * storage 유효성 기본 체크 함수
- * 스토리지 엔진이 정상 동작하는지 확인 (setItem/getItem/removeItem)
- */
+// --- Default Storage Assertion ---
 function defaultAssertStorage(storage: Storage) {
+  if (
+    !storage ||
+    typeof storage.getItem !== 'function' ||
+    typeof storage.setItem !== 'function'
+  ) {
+    throw new Error('[vuex-state-storage-sync] Invalid storage engine: missing getItem/setItem');
+  }
   try {
-    storage.setItem && storage.setItem('__test__', '1');
-    storage.removeItem && storage.removeItem('__test__');
+    storage.setItem('__vsss_test__', '1');
+    if (typeof storage.removeItem === 'function') {
+      storage.removeItem('__vsss_test__');
+    } else {
+      storage.setItem('__vsss_test__', '');
+    }
   } catch (e) {
     console.warn('[vuex-state-storage-sync] Storage is not usable:', e);
     throw new Error('Invalid storage engine');
   }
 }
 
-/**
- * 기본 state 복원 함수(getState)
- * - string이면 JSON 파싱
- * - object면 그대로 반환
- * - 예외시 undefined
- */
+// --- Default State Handlers ---
 function defaultGetState<S>(key: string, storage: Storage): Partial<S> | undefined {
   try {
     const value = storage.getItem(key);
@@ -76,120 +77,115 @@ function defaultGetState<S>(key: string, storage: Storage): Partial<S> | undefin
   }
 }
 
-/**
- * 기본 state 저장 함수(setState)
- * - state를 JSON 문자열로 저장
- */
 function defaultSetState<S>(key: string, state: Partial<S>, storage: Storage): void {
   try {
     storage.setItem(key, JSON.stringify(state));
-  } catch {}
+  } catch (e) {
+    // storage full, quota exceeded, etc.
+    // Optional: emit warning
+  }
 }
 
-/**
- * 기본 state 삭제 함수(removeState)
- * - removeItem이 있으면 해당 함수 사용
- * - 없으면 setItem(key, undefined)로 대체
- */
 function defaultRemoveState(key: string, storage: Storage): void {
-  if (storage.removeItem) {
+  if (typeof storage.removeItem === 'function') {
     try {
       storage.removeItem(key);
     } catch (err) {
       console.warn('[vuex-state-storage-sync] Failed to remove state:', err);
     }
   } else {
-    storage.setItem(key, undefined as any);
+    // Remove by setting to empty string (safer than undefined)
+    storage.setItem(key, '');
   }
 }
 
-/**
- * 기본 reducer 함수
- * - paths가 있으면 해당 경로만 추출
- * - 없으면 전체 state 반환
- */
+// --- Default Reducer ---
 function defaultReducer<S extends object>(state: S, paths?: string[]): Partial<S> {
-  return Array.isArray(paths) ? paths.reduce((substate, path) => shvl.set(substate, path, shvl.get(state, path)), {} as Partial<S>) : state;
+  return Array.isArray(paths)
+    ? paths.reduce(
+        (substate, path) => shvl.set(substate, path, shvl.get(state, path)),
+        {} as Partial<S>
+      )
+    : state;
 }
 
-/**
- * 기본 filter 함수
- * - 모든 mutation에 대해 저장하도록 true 반환
- */
+// --- Default Filter: All Mutations ---
 function defaultFilter(_mutation: MutationPayload): boolean {
   return true;
 }
 
-/**
- * 기본 subscriber 함수
- * - store.subscribe로 mutation 감지
- */
+// --- Default Subscriber ---
 function defaultSubscriber<State>(store: Store<State>) {
   return function (handler: (mutation: any, state: State) => void) {
     return store.subscribe(handler);
   };
 }
 
-/**
- * vuex-state-storage-sync 플러그인 메인 함수
- * @param options 사용자 지정 옵션
- */
+// --- SSR Safe Storage Getter ---
+function getDefaultStorage(): Storage | undefined {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    return window.localStorage;
+  }
+  return undefined;
+}
+
+// --- Main Plugin Export ---
 export default function <State extends object = any>(options?: Options<State>): (store: Store<State>) => void {
   options = options || {};
 
-  // 스토리지 엔진 지정(localStorage가 기본)
-  const storage: Storage = options.storage || (window && window.localStorage);
-  // 저장소 키명 기본값
+  // SSR-safe storage fallback
+  const storage: Storage | undefined =
+    options.storage || getDefaultStorage();
+
+  if (!storage) {
+    throw new Error('[vuex-state-storage-sync] No storage engine available (is this SSR?)');
+  }
+
   const key = options.key || 'store';
 
-  // storage 유효성 체크 (문제 발생시 바로 throw)
+  // Storage assertion
   (options.assertStorage || defaultAssertStorage)(storage);
 
-  // 병합 함수 (기본: deepmerge)
   const mergeFn = options.merge || merge;
+  const arrayMergeFn: ArrayMergeFn =
+    options.arrayMerge || options.arrayMerger || ((_storeArr, savedArr) => savedArr);
 
-  // 배열 병합 함수(arrayMerge/arrayMerger 둘 다 지원)
-  const arrayMergeFn: ArrayMergeFn = options.arrayMerge || options.arrayMerger || ((_storeArr, savedArr) => savedArr);
-
-  // 상태 get/set/remove/reducer/filter/subscriber 콜백 할당
   const getState = options.getState || defaultGetState;
   const setState = options.setState || defaultSetState;
   const removeState = options.removeState || defaultRemoveState;
   const reducer = options.reducer || defaultReducer;
   const filter = options.filter || defaultFilter;
   const subscriber = options.subscriber || defaultSubscriber;
-  const rehydrated = options.rehydrated || (() => {});
+  const rehydrated =
+    typeof options.rehydrated === 'function' ? options.rehydrated : () => {};
 
-  // 저장소에서 기존 state 가져오기
+  // Load state (optionally before store creation)
   const fetchSavedState = () => getState(key, storage);
 
   let savedState: Partial<State> | undefined;
 
-  // fetchBeforeUse 옵션이 true면 먼저 state 복원
   if (options.fetchBeforeUse) {
     savedState = fetchSavedState();
   }
 
-  // 실제 플러그인 함수(store에 연결됨)
   return function (store: Store<State>) {
     if (!options.fetchBeforeUse) {
       savedState = fetchSavedState();
     }
 
-    // 저장된 state가 있으면 복원(merge 또는 overwrite)
-    if (typeof savedState === 'object' && savedState !== null) {
+    if (savedState && typeof savedState === 'object') {
       store.replaceState(
         options.overwrite
           ? (savedState as State)
           : (mergeFn(store.state as Partial<State> & object, savedState as Partial<State> & object, {
               arrayMerge: arrayMergeFn,
               clone: false,
-            }) as State),
+            }) as State)
       );
       rehydrated(store);
     }
 
-    // mutation 발생시 state 저장(subscribe)
+    // Subscribe to mutations and persist filtered state
     subscriber(store)((mutation, state) => {
       if (filter(mutation)) {
         setState(key, reducer(state, options.paths), storage);
