@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ljlm0402/vuex-state-storage-sync/raw/images/logo.jpg" border="0" alt="logo" width="400" />
+  <img src="https://github.com/ljlm0402/vuex-state-storage-sync/raw/images/logo.jpg" alt="logo" width="600" />
 </p>
 
 <h2 align="center">Vuex State & Storage Synchronization</h2>
@@ -20,6 +20,10 @@
     <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" />
   </a>
   <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" />
+</p>
+
+<p align="center">
+  <strong>· English <a href="./README.ko.md">· Korean</a></strong>
 </p>
 
 ---
@@ -128,22 +132,16 @@ syncStateStorage({
 });
 ```
 
-## 💬 Commit Message Convention
+## 🤝 Contributing
 
-| When         | Commit Message                |
-| :----------- | :---------------------------- |
-| Add feature  | `feat: ⚡️ Add function`      |
-| Fix bug      | `fix: 🐞 Fix bug`             |
-| Refactor     | `refactor: 🛠 Refactoring`     |
-| Add package  | `package: 📦 Add package`     |
-| Docs change  | `docs: 📚 Fix readme`         |
-| Style change | `style: 👁 Improvements style` |
-| Releases     | `releases: 🎉 Releases`       |
+Contributions are always welcome! Please feel free to open an issue or submit a pull request.
 
-## 📜 License
+## 💳 License
 
 [MIT](LICENSE)
 
-> ### Made with ❤️ by AGUMON 🦖
->
-> ### [GitHub](https://github.com/ljlm0402)
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/ljlm0402">AGUMON</a> 🦖
+</p>
