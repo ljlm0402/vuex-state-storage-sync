@@ -9,17 +9,41 @@
     Persistence & Synchronization with Local/Session Storage
   </b>
 </p>
+
+<p align ="center">
+    <a href="https://nodei.co/npm/vuex-state-storage-sync" target="_blank">
+      <img src="https://nodei.co/npm/vuex-state-storage-sync.png" alt="npm Info" />
+  </a>
+</p>
+
 <p align="center">
-  <a href="https://www.npmjs.com/package/vuex-state-storage-sync">
-    <img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="NPM Version" />
+    <a href="http://npm.im/vuex-state-storage-sync" target="_blank">
+      <img src="https://img.shields.io/npm/v/vuex-state-storage-sync.svg" alt="npm Version" />
+    </a>
+    <a href="http://npm.im/vuex-state-storage-sync" target="_blank">
+      <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="npm Release Version" />
+    </a>
+    <a href="http://npm.im/vuex-state-storage-sync" target="_blank">
+      <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="npm Downloads" />
+    </a>
+    <a href="http://npm.im/vuex-state-storage-sync" target="_blank">
+      <img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="npm Package License" />
+    </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/stargazers" target="_blank">
+    <img src="https://img.shields.io/github/stars/ljlm0402/vuex-state-storage-sync" alt="github Stars" />
   </a>
-  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/blob/main/LICENSE">
-    <img src="https://img.shields.io/npm/l/vuex-state-storage-sync.svg" alt="Package License" />
+  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/network/members" target="_blank">
+    <img src="https://img.shields.io/github/forks/ljlm0402/vuex-state-storage-sync" alt="github Forks" />
   </a>
-  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/releases">
-    <img src="https://img.shields.io/github/v/release/ljlm0402/vuex-state-storage-sync" alt="Release Version" />
+  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/stargazers" target="_blank">
+    <img src="https://img.shields.io/github/contributors/ljlm0402/vuex-state-storage-sync" alt="github Contributors" />
   </a>
-  <img src="https://img.shields.io/npm/dm/vuex-state-storage-sync.svg" alt="NPM Downloads" />
+  <a href="https://github.com/ljlm0402/vuex-state-storage-sync/issues" target="_blank">
+    <img src="https://img.shields.io/github/issues/ljlm0402/vuex-state-storage-sync" alt="github Issues" />
+  </a>
 </p>
 
 <p align="center">
